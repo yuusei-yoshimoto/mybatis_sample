@@ -26,6 +26,13 @@ public class CourseController {
 		this.courseService = courseService;
 	}
 
+	@GetMapping("/{id}")
+	public String detail(@PathVariable Integer id, Model model) {
+		Course course = this.courseService.findById(id);
+		model.addAttribute("course", course);
+		return "detail";
+	}
+
 	@GetMapping("/list")
 	public String index(Model model
 			, @ModelAttribute CourseForm courseForm

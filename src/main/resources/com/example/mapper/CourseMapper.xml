@@ -7,6 +7,14 @@
 	<resultMap type="com.example.entity.Course" id="courseMap">
 		<id column="id" property="id"/>
 		<result column="name" property="name"/>
+		<association property="courseDetail" javaType="com.example.entity.CourseDetail">
+			<id column="CD_ID" property="id"/>
+			<result column="DESCRIPTION" property="description"/>
+		</association>
+		<collection property="chapters" ofType="com.example.entity.Chapter">
+			<id column="CH_ID" property="id"/>
+			<result column="CH_NAME" property="name"/>
+		</collection>
 	</resultMap>
 
 	<select id="findAll" resultMap="courseMap">
@@ -30,7 +38,25 @@
 	</insert>
 
 	<select id="findById" resultMap="courseMap">
-		SELECT * FROM COURSES WHERE id = #{id}
+		SELECT
+			C.ID,
+			C.NAME,
+			CD.ID AS CD_ID,
+			CD.DESCRIPTION,
+			CH.ID AS CH_ID,
+			CH.NAME AS CH_NAME
+		FROM
+			COURSES AS C
+		INNER JOIN
+			COURSE_DETAILS AS CD
+		ON
+			C.ID = CD.COURSES_ID
+		INNER JOIN
+			CHAPTERS AS CH
+		ON
+			C.ID = CH.COURSES_ID
+		WHERE
+			C.ID = #{id}
 	</select>
 
 	<update id="update">
